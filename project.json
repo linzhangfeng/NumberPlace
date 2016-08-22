@@ -1,0 +1,35 @@
+{
+    "project_type":"javascript",
+    "debugMode":1,
+    "showFPS":false,
+    "frameRate":60,
+    "noCache":false,
+    "id":"gameCanvas",
+    "renderMode":0,
+    "engineDir":"frameworks/cocos2d-html5",
+    "modules":[
+        "cocos2d",
+        "cocostudio"
+    ],
+
+    "jsList" : [
+        "src/config/GameConfig.js",
+        "src/resource.js",
+         "src/SysMenu.js",
+        "src/ButtonSprite.js",
+        "src/CourseLayer.js",
+        "src/GameLayer.js",
+        "src/UnitSprite.js",
+        "src/GameState.js",
+        "src/CommonUtil.js",
+
+        "src/utils/Utils.js",
+        "src/frameworks/FrameworkdsConfig.js",
+        "src/frameworks/FrameworksResource.js",
+        "src/BaseLayer/PopUpBaseLayer.js",
+        "src/BaseLayer/GameBaseLayer.js",
+        "src/scene/MainScene.js",
+        "src/scene/GameScene.js",
+        "src/layer/GamePlaysLayer.js"
+    ]
+}
