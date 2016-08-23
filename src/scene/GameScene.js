@@ -44,7 +44,7 @@ var GameScene = cc.Scene.extend({
 			pLayer = new GamePlaysLayer(this._nLayerType);
 			break;
 		case GameConfig.GameList.GamePlay3:
-			pLayer = new GamePlaysLayer(this._nLayerType);
+			pLayer = new GameNinePuzzleLayer(this._nLayerType);
 			break;	
 		}
 		return pLayer;

@@ -1,6 +1,8 @@
 var res = {
     Bg_Main_Png:        "res/BackGround/frame_exam_bg.png",
     Bg_GamePlay_Jpg:   "res/BackGround/game_background.jpg",
+    PuzzleNine:         "res/Sprite/PT_000_0.png",
+    PuzzleNine_Kuang:   "res/Sprite/PT-6412_dakuang.png",
 
     bg_jpg : "res/bg.png",
     bg2_jpg : "res/bg.png",

@@ -30,6 +30,7 @@
         "src/BaseLayer/GameBaseLayer.js",
         "src/scene/MainScene.js",
         "src/scene/GameScene.js",
-        "src/layer/GamePlaysLayer.js"
+        "src/layer/GamePlaysLayer.js",
+        "src/layer/GameNinePuzzleLayer.js"
     ]
 }

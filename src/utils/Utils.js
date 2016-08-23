@@ -20,7 +20,7 @@ utils = {
 				max = min;
 				min = temp;
 			}
-			var range = max-min-1;
+			var range = max-min;
 			var rand = Math.random();
 
 			return min + Math.round(rand * range);

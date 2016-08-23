@@ -6,11 +6,27 @@ var GamePlaysLayer=GameBaseLayer.extend({
 	preUnit:null,//上一个选中的单元（设置为选中的颜色）
 	step:0,//移动的步数
 	lookNum:0,//查看次数
+	_hideValue:0,//需要隐藏的数字
 	ctor:function(games){
 		this._super(games);
-		this.init();
+		this.initArray();
+		this.initData();
 	},
-	init:function(){
+	initArray: function () {
+		this._arrImage = [];
+		for(var i = 0; i < GamePlaysLayer.Sum;i++){
+			var name = "res/"+ i +".png";
+			this._arrImage.push(name);
+		}
+
+		//目标矩阵
+		this._arrAim = [
+			1,2,3,
+			4,5,6,
+			7,8,0
+		];
+	},
+	initData:function(){
 		/**加载plist文件*/
 		cc.spriteFrameCache.addSpriteFrames(res.nums_plist);
 		
@@ -20,29 +36,24 @@ var GamePlaysLayer=GameBaseLayer.extend({
 		this._size = bgSprite.getContentSize();
 		this._bg = bgSprite;　
 
+		this.initPositionArray();
+
+		this.initNumber();
 		/**单元格子*/
 		GamePlaysLayer.unitSpriteArray=[];
 		/**移动时选中的单元格*/
 		GamePlaysLayer.checkUnitArray=[];
 
 		//初始化中间的布局
-		this.initCenter();
+		//this.initCenter();
 
-		var layer = new GamePlaysInformationLayer(this.getTag());
-		this.addChild(layer);
+		//var layer = new GamePlaysInformationLayer(this.getTag());
+		//this.addChild(layer);
 
 
-		this.showResultLayer();
+		//this.showResultLayer();
 
 		return;
-		//初始化上方的layer
-		this.initTopLayer();
-
-		//初始化下方的layer
-		this.initBelowLayer();
-
-		//初始化战斗结果layer
-		this.initResultLayer();
 		//return;
 		var num=0;
 		var array=GamePlaysLayer.unitSpriteArray;
@@ -61,289 +72,100 @@ var GamePlaysLayer=GameBaseLayer.extend({
                               
 		return true;
 	},
+	initPositionArray:function(){
+		var offx = 185;
+		var offy = 185;
+		this._arrOriginalPosition = [];
+		for(var i = 0;i < GamePlaysLayer.row;i++){
+			for(var k = 0;k < GamePlaysLayer.row;k++){
+				var pos = cc.p(this._size.width*0.5-offx + offx*k,this._size.height*0.5 + offy - offy*i);
+				this._arrOriginalPosition.push(pos);
+			}
+		}
+	},
+	//初始化1 - 8
+	initNumber:function(){
+		//计时开始
+		//this.schedule(this.updateCountTime,1.0);
+
+		var arrGroupNumber = this.createGroupRndNumberArray();
+		this._curArray = arrGroupNumber;
+
+		cc.log("initNumber="+this._curArray);
+		//保存所有的精灵
+		if(this._arrAllSprite){
+			arrayUtils.removeAllItems(this._arrAllSprite, true);
+		}
+
+		this._arrAllSprite = [];
+		for(i = 0;i < GamePlaysLayer.Sum;i++){
+			var pos = this._arrOriginalPosition[i];
+			cc.log("this._curArray[i]="+this._curArray[i]);
+			var number = new cc.Sprite(this._arrImage[this._curArray[i]]);
+			number.setPosition(pos);
+			this._bg.addChild(number);
+			this._arrAllSprite.push(number);
+			if(this._curArray[i] == this._hideValue){
+				number.setOpacity(0);
+			}
+		}
+	},
+	//把一个正常顺序的数组 逆转 n 次  得到一个新的数组
+	createGroupRndNumberArray:function(){
+		var rnd = utils.getRandom(100, 1000);
+		var count = 0;
+
+		var arrCur = this._arrAim.slice(0);
+		cc.log("createGroupRndNumberArray="+)
+		this._curArray = arrCur;
+		while(1){
+			if(count == rnd){
+				return arrCur;
+			}
+			var dir = utils.getRandom(0, 3);
+			this.changeCurArrayValue(dir);
+			count++;
+		}
+	},
+	getHideSpriteIndex:function(arr){
+		var len = arr.length;
+		for(var i = 0;i < len;i++){
+			var value = arr[i];
+			if(value == this._hideValue){
+				return i;
+			}
+		}
+		return -1
+	},
+	getHideSpriteAroundIndexArray:function(){
+		var i = this.getHideSpriteIndex(this._curArray);
+
+		var arr = [];
+		var up = i - 3;
+		var down = i + 3;
+		var right = i + 1;
+		if(parseInt((right)/3) != parseInt((i)/3)){
+			right = -1
+		}
+		var left = i - 1;
+		if(parseInt((left)/3) != parseInt((i)/3)){
+			left = -1
+		}
+		arr.push(up);
+		arr.push(down);
+		arr.push(left);
+		arr.push(right);
+
+		for(var i = 0;i < arr.length;i++){
+			if(arr[i] < 0 || arr[i] > 8){
+				arr[i] = -1;
+			}
+		}
+		return arr;
+	},
 	showResultLayer: function () {
 		var layer = new GamePlayResultLayer(this.getTag());
 		this.addChild(layer,100);
-	},
-	/**初始化下方的layer*/
-	initBelowLayer:function(){
-		var belowLayer=this.belowLayer=new cc.LayerColor(cc.color(255, 255, 255, 1),this.centerLayer.width,(winSize.height-this.centerLayer.height)/4);
-		this.addChild(belowLayer);
-		belowLayer.x=(winSize.width-belowLayer.width)/2;
-		belowLayer.y=belowLayer.height*7/8;
-		
-		var num=1/4;
-		if(GS.gameType!=0){
-			num=1/8;
-			
-			//查看按钮
-			var btn=this.buttonSprite=new ButtonSprite("",res.btn_blue_a_png,"",belowLayer,this.onTouchBeganBack.bind(this),this.onTouchEndedBack.bind(this));
-
-			btn.x=belowLayer.width/2;
-			btn.y=belowLayer.height/2;
-			var infoSprite=new cc.Sprite(res.start_png);
-			btn.addChild(infoSprite);
-			btn.infoSprite=infoSprite;
-			infoSprite.x=btn.width/2;
-			infoSprite.y=btn.height/2;
-
-			var label=this.viewLabel=new cc.LabelTTF("(0/2)","Arial",30);
-			label.setVisible(false);
-			belowLayer.addChild(label);
-			label.x=btn.x;
-			label.y=btn.y-btn.height*4/5;
-			label.color=cc.color(132,84,61,255);
-		}
-		
-		//重新开始
-		var btn2=new ButtonSprite("",res.refresh_png,"",belowLayer,null,function(){
-			this.reStart();
-		}.bind(this));
-		btn2.x=belowLayer.width*(1-num);
-        btn2.y=belowLayer.height/2;
-        
-        //返回首页
-        var backBtn=new ButtonSprite("",res.home_png,"",belowLayer,null,function(){
-        	//cc.director.runScene(new cc.TransitionFade(0.4,new SysMenu.scene()));
-           
-        	if(cc.sys.isMobile){
-        		//显示插屏广告
-        		var ret = jsb.reflection.callStaticMethod("NativeOcClass","callNativeShowInterstitial");
-        	}
-                                     
-        	cc.director.runScene(new SysMenu.scene());
-        });
-
-        backBtn.x=belowLayer.width*num;
-        backBtn.y=belowLayer.height/2;;
-	},
-	/**按钮回调*/
-	onTouchBeganBack:function(){},
-	/**按钮回调*/
-	onTouchEndedBack:function(){
-		if(this.gameState==0||this.gameState==2){
-			this.setButtonSpriteState();
-		}else if(this.gameState==1){
-			if(this.lookNum>=GamePlaysLayer.lookNumMax){
-				return;
-			}
-			this.lookNum++;
-
-			//this.buttonSprite.setText("继 续");
-			this.gameState=2;
-			
-			var infoSprite=this.buttonSprite.infoSprite;
-			infoSprite.setTexture(res.continue_png);
-			
-			this.viewLabel.setVisible(false);
-			
-			var array=GamePlaysLayer.unitSpriteArray;
-			for(var i=0;i<array.length;i++){
-				var o=array[i];
-				o.showLabel();
-			}
-		}
-	},
-	/**游戏开始时，按钮设置为查看状态*/
-	setButtonSpriteState:function(){
-		//this.buttonSprite.setText("查看["+(GamePlaysLayer.lookNumMax-this.lookNum)+"]");
-		this.gameState=1;
-		
-		var infoSprite=this.buttonSprite.infoSprite;
-		infoSprite.setTexture(res.view_png);
-		
-		this.viewLabel.setVisible(true);
-		this.viewLabel.setString("("+(this.lookNum)+"/"+GamePlaysLayer.lookNumMax+")");
-		
-		var array=GamePlaysLayer.unitSpriteArray;
-		for(var i=0;i<array.length;i++){
-			var o=array[i];
-			o.hideLabel();
-			if(GS.gameType==1){
-				//正确位置显示
-				if(o.index==o.index0){
-					o.showLabel();
-				}
-			}
-		}
-	},
-	/**初始化上方的layer*/
-	initTopLayer:function(){
-		var topLayer=this.topLayer=new cc.LayerColor(cc.color(255, 255, 255, 1),this.centerLayer.width,(winSize.height-this.centerLayer.height)/4);
-		this.addChild(topLayer);
-		topLayer.x=(winSize.width-topLayer.width)/2;
-		topLayer.y=winSize.height-topLayer.height*15/8;
-		
-		//显示的难度信息
-		var typeSp=new cc.Sprite(res.dddd_02_png);
-		topLayer.addChild(typeSp);
-		typeSp.y=topLayer.height/2;;
-		typeSp.x=topLayer.width*1/7;
-
-		var str="";
-		if(GS.gameType==0){
-			str=res.hd_cn_png;
-		}else if(GS.gameType==1){
-			str=res.hd_gs_png;
-		}else{
-			str=res.hd_ds_png;
-		}
-		var typeSpInfo=new cc.Sprite(str);
-		topLayer.addChild(typeSpInfo);
-		typeSpInfo.y=typeSp.y;
-		typeSpInfo.x=typeSp.x+typeSpInfo.width/3;
-		
-		//--
-		//显示的步数信息
-		var sp=new cc.Sprite(res.di_png);
-		topLayer.addChild(sp);
-		sp.y=topLayer.height/2+sp.height/2;
-		sp.x=topLayer.width*11/15;
-		
-		var sp2=new cc.Sprite(res.bu_png);
-		topLayer.addChild(sp2);
-		sp2.y=sp.y;
-		sp2.x=topLayer.width*4/5+sp.width*2;
-		
-		var stepLabel=this.stepLabel= new cc.LabelBMFont("0", res.step_num_fnt);
-		topLayer.addChild(stepLabel);
-		stepLabel.y=sp.y+sp.y/20;
-		stepLabel.x=sp.x+sp.width*1.5;
-		stepLabel.textAlign = cc.TEXT_ALIGNMENT_CENTER;
-		
-		var step=this.step=0;
-
-		//--
-		var zqSp=new cc.Sprite("#zq.png");
-		topLayer.addChild(zqSp);
-		zqSp.x=sp.x+sp.width/2;
-		zqSp.y=sp.y-sp.height*12/10;
-		
-		/**
-		var infoLabel=this.infoLabel=new cc.LabelTTF("0/8","Arial",30);
-		topLayer.addChild(infoLabel);
-		infoLabel.x=stepLabel.x;
-		infoLabel.y=stepLabel.y-stepLabel.height*2;
-		*/
-		
-		var infoLabel=this.infoLabel= new cc.LabelBMFont("0/8", res.step_num_fnt);
-		topLayer.addChild(infoLabel);
-		infoLabel.x=zqSp.x+zqSp.width;
-		infoLabel.y=zqSp.y+4;
-		infoLabel.textAlign = cc.TEXT_ALIGNMENT_CENTER;
-	},
-	/**初始化战斗结果layer*/
-	initResultLayer:function(){
-		this.resultLayer=new cc.LayerColor(cc.color(0, 0, 0, 80),winSize.width,winSize.height);
-		this.resultLayer.setVisible(false);
-		this.resultLayer.setScale(0.0001);
-		this.addChild(this.resultLayer);
-		
-		var listener1 = cc.EventListener.create({
-			event: cc.EventListener.TOUCH_ONE_BY_ONE,
-			swallowTouches: true,
-			onTouchBegan: function (touch, event) {
-				var target = event.getCurrentTarget();
-				var locationInNode = target.convertToNodeSpace(touch.getLocation());
-				var s = target.getContentSize();
-				var rect = cc.rect(0, 0, s.width, s.height);
-				if (cc.rectContainsPoint(rect, locationInNode)) {
-					return true;
-				}
-				return false;
-			},
-			onTouchMoved: function (touch, event) {
-			},
-			onTouchEnded: function (touch, event) {
-			}
-		});
-		cc.eventManager.addListener(listener1, this.resultLayer);
-
-		//背景框
-		var resultSp=new cc.Sprite(res.box1_png);
-		this.resultLayer.addChild(resultSp);
-		resultSp.x=this.resultLayer.width/2;
-		resultSp.y=this.resultLayer.height/2;
-
-		//蜗牛
-		var resultSp2=new cc.Sprite(res.snail_png);
-		this.resultLayer.addChild(resultSp2);
-		resultSp2.x=resultSp.x;
-		resultSp2.y=resultSp.y+resultSp2.height*2/3;
-
-		var label=this.resultLabel=new cc.LabelTTF("您共用8步通过本关","Arial",40);
-		this.resultLayer.addChild(label);
-		label.x=resultSp.x;
-		label.y=resultSp2.y-resultSp2.height*2/3;
-		label.color=cc.color(132,84,61,255);
-
-		var label2=this.resultLabel2=new cc.LabelTTF("","Arial",25);
-		this.resultLayer.addChild(label2);
-		label2.x=label.x;
-		label2.y=label.y-label.height;;
-		label2.color=cc.color(132,84,61,255);
-
-		//分数
-		var label3=this.resultLabel3=new cc.LabelTTF("","Arial",35);
-		this.resultLayer.addChild(label3);
-		label3.x=label2.x;
-		label3.y=label2.y-label.height;
-		label3.color=cc.color(1232,93,15,255);
-		
-		//首页
-		var btn=new ButtonSprite("",res.home_png,"",this.resultLayer,null,function(){
-				//cc.director.runScene(new cc.TransitionFade(0.4,new SysMenu.scene()));
-				cc.director.runScene(new SysMenu.scene());
-			}.bind(this));
-		btn.x = this.resultLayer.width / 3;
-		btn.y = resultSp.y-resultSp.height/2+btn.height/6;
-
-        //重玩
-        var btn2=new ButtonSprite("",res.refresh_png,"",this.resultLayer,null,function(){
-        	if(cc.sys.isMobile){
-        		//创建横幅广告
-        		var ret = jsb.reflection.callStaticMethod("NativeOcClass","callNativeCreateBanner");
-        	}
-       
-        	this.reStart();
-        }.bind(this));
-		btn2.x = this.resultLayer.width*2 / 3;
-        btn2.y = btn.y;
-
-	},
-	/**重新开始*/
-	reStart:function(){
-		this.resultLayer.setVisible(false);
-		this.resultLayer.setScale(0.0001);
-		if(GS.gameType==0){
-			this.gameState=1;
-		}else{
-			this.gameState=0;
-			
-			var infoSprite=this.buttonSprite.infoSprite;
-			infoSprite.setTexture(res.start_png);
-			//this.buttonSprite.setText("开 始");
-			this.viewLabel.setVisible(false);
-		}
-		
-		//打乱方块
-		this.disorderUnitSprite();
-
-		//重置分数
-		this.setStep(1);
-
-		if(this.preUnit){
-			//this.preUnit.boxLayer.setColor(UnitSprite.unSelectColor)
-		}
-		this.preUnit=null;
-
-		this.lookNum=0;
-
-		var array=GamePlaysLayer.unitSpriteArray
-		for(var i=0;i<array.length;i++){
-			var o=array[i];
-			o.showLabel();
-		}
 	},
 	/**初始化中间的布局*/
 	initCenter:function(){
@@ -353,14 +175,12 @@ var GamePlaysLayer=GameBaseLayer.extend({
 		this.addChild(layer);
 		layer.x=(winSize.width-layer.width)/2;
 		layer.y=(winSize.height-layer.height)/2;
-
 		
 		//初始化常量
 		UnitSprite.width=UnitSprite.height=layer.width/GamePlaysLayer.row;
 		
 		//初始化方块
 		for(var i=0;i<GamePlaysLayer.row*GamePlaysLayer.row;i++){
-			
 			var hide=false;
 			if(i==GamePlaysLayer.row*GamePlaysLayer.row-1){
 				hide=true;
@@ -415,9 +235,6 @@ var GamePlaysLayer=GameBaseLayer.extend({
 			}
 			
 			this.exchangePosition(spa,hideSp,false);
-//			cc.log(spa.index+","+hideSp.index);
-			
-			//spa.boxLayer.setColor(UnitSprite.unSelectColor);
 		}
 
 		if(this.infoLabel){
@@ -600,37 +417,111 @@ var GamePlaysLayer=GameBaseLayer.extend({
 			return false;
 		}
 	},
-	/**获取游戏记录*/
-	getSteps:function(type){
-		var k="s"+type;
-		var min=GS.steps[k];
-		return min;
+	changeCurArrayValue:function(direction){
+		if(direction != -1){
+			var index = this.getHideSpriteIndex(this._curArray);
+			var arrayAroundIndex = this.getHideSpriteAroundIndexArray();
+			this._curArray[index] = this._curArray[arrayAroundIndex[direction]];
+			this._curArray[arrayAroundIndex[direction]] = this._hideValue;
+		}
 	},
-	/**设置游戏记录*/
-	setSteps:function(type,step){
-		var k="s"+type;
-		var min=GS.steps[k];
-		if(step<min||min==0){
-			GS.steps[k]=step;
-
-			var model=GS.LocalStorageModel;
-			model.steps=GS.steps;
-			model.sound=GS.sound;
-
-			var info=JSON.stringify(model);
-
-			//存储
-			GS.setLocalStorage(GS.LocalStorageKey,info);
-			
-			//Gamecenter上传分数
-			if(cc.sys.isMobile){
-				var score=1000-this.step;//GameCenter使用
-				var ret = jsb.reflection.callStaticMethod("NativeOcClass","reportScore:forType:",score,type);
+	//与可以碰撞的精灵是否发生判断
+	getCheckCollosion:function(worldPos){
+		var arrayAroundIndex = this.getHideSpriteAroundIndexArray(index);
+		var  len = arrayAroundIndex.length;
+		var nodePos = this._bg.convertToNodeSpace(worldPos);
+		for(var i = 0;i < len;i++){
+			if(arrayAroundIndex[i] != -1){
+				var sprite = this._arrAllSprite[arrayAroundIndex[i]];
+				var rect = sprite.getBoundingBox();
+				if(cc.rectContainsPoint(rect, nodePos)){
+					sprite._dir = i;
+					return sprite;
+				}
 			}
 		}
-	}
+		return false;
+	},
+	//是否需要刷新
+	isRefresh:function(worldPos){
+		var dir = this._curCollosionSpirte._dir;
+		var offxy = 100;
+		cc.log("===>isRefresh",worldPos.y,this._curPos.y,dir);
+		switch(dir){
+			case 1://上
+				if(worldPos.y - this._curPos.y > offxy){
+					return true;
+				}
+				break;
+			case 0://下
+				if(worldPos.y - this._curPos.y < -offxy){
+					return true;
+				}
+				break;
+			case 3://左
+				if(worldPos.x - this._curPos.x < -offxy){
+					return true;
+				}
+				break;
+			case 2://右
+				if(worldPos.x - this._curPos.x > offxy){
+					return true;
+				}
+				break;
+
+		}
+		return false;
+	},
+	//置换数组元素
+	changeSpritePosition:function(){
+		var dir = this._curCollosionSpirte._dir;
+
+		this.changeCurArrayValue(dir);
+
+		this.refreshSprite();
+		this.refreshTimeGrade();
+		if(this.isFinish()){
+			cc.log("===>isFinish");
+			this.showAllSprite();
+			cc.eventManager.removeListeners(this.listener);
+			//this.unschedule(this.updateCountTime);
+			//显示结束界面
+			var action = cc.sequence(cc.delayTime(2.0),cc.callFunc(function(){
+				this.showGameEnd();
+			},this));
+			this.runAction(action);
+		}
+	},
+	onTouchBegan : function(touch, event){
+		var target = event.getCurrentTarget();
+		var touchPos = touch.getLocation();
+
+		target._curPos = null;
+		target._curCollosionSpirte = target.getCheckCollosion(touchPos);
+		if(target._curCollosionSpirte){
+			cc.log("==>点击可点精灵");
+			target._curPos = touchPos;
+		}
+		return true;
+	},
+	onTouchMoved : function(touch, event){
+		var target = event.getCurrentTarget();
+		var touchPos = touch.getLocation();
+	},
+	onTouchEnded : function(touch, event){
+		var target = event.getCurrentTarget();
+		var touchPos = touch.getLocation();
+
+		if(target._curPos && target.isRefresh(touchPos)){
+			target.changeSpritePosition();
+			cc.log("==>onTouchEnded");
+			target._curPos = null;
+		}
+	},
 });
 //常量
+/*总共拼图的个数*/
+GamePlaysLayer.Sum = 9;
 /**具有的行（列）数*/
 GamePlaysLayer.row=3;
 /**每局最多可以查看的次数*/
