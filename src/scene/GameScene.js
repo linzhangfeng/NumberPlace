@@ -38,7 +38,7 @@ var GameScene = cc.Scene.extend({
 		cc.log("====>initLayer="+this._nLayerType);
 		switch(this._nLayerType){	
 		case GameConfig.GameList.GamePlay1:
-			pLayer = new GamePlaysLayer(this._nLayerType);
+			pLayer = new GameLayer(this._nLayerType);
 			break;
 		case GameConfig.GameList.GamePlay2:
 			pLayer = new GamePlaysLayer(this._nLayerType);
