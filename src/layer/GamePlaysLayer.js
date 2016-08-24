@@ -39,6 +39,8 @@ var GamePlaysLayer=GameBaseLayer.extend({
 
 		this.initPositionArray();
 
+		this.addElementFrame();
+
 		this.initNumber();
 
 		this.initGamesInformationLayer();
@@ -69,6 +71,13 @@ var GamePlaysLayer=GameBaseLayer.extend({
 		this.updateSprite();
 
 	},
+	addElementFrame: function () {
+		var image = new ccui.ImageView(res.Sprite_Di_Png);
+		image.setPosition(this._arrOriginalPosition[4]);
+		image.setScale9Enabled(true);
+		image.setContentSize(this._size.height,this._size.height);
+		this._bg.addChild(image);
+	},
 	updateSprite:function(){
 
 		//保存所有的精灵
@@ -87,6 +96,12 @@ var GamePlaysLayer=GameBaseLayer.extend({
 			if(this._curArray[i] == this._hideValue){
 				number.setOpacity(0);
 			}
+
+			//添加数字
+			var num = new cc.LabelTTF(this._curArray[i],"Arial",30);
+			num.setNormalizedPosition(0.5,0.5);
+			num.setColor(cc.color(0,255,255));
+			number.addChild(num)
 		}
 	},
 	//把一个正常顺序的数组 逆转 n 次  得到一个新的数组
@@ -113,6 +128,7 @@ var GamePlaysLayer=GameBaseLayer.extend({
 				return i;
 			}
 		}
+		cc.error("数组元素缺失");
 		return -1
 	},
 	getHideSpriteAroundIndexArray:function(){
@@ -134,11 +150,14 @@ var GamePlaysLayer=GameBaseLayer.extend({
 		arr.push(left);
 		arr.push(right);
 
+		cc.log("===>getHideSpriteAroundIndexArray="+i);
 		for(var i = 0;i < arr.length;i++){
 			if(arr[i] < 0 || arr[i] > 8){
 				arr[i] = -1;
 			}
+			cc.log("===>aroundIndexArray="+arr[i]);
 		}
+
 		return arr;
 	},
 	showResultLayer: function () {
@@ -153,9 +172,9 @@ var GamePlaysLayer=GameBaseLayer.extend({
 	},
 	changeCurArrayValue:function(direction){
 		var index = this.getHideSpriteIndex(this._curArray);
-		if(direction != -1 && index != -1){
-
-			var arrayAroundIndex = this.getHideSpriteAroundIndexArray();
+		var arrayAroundIndex = this.getHideSpriteAroundIndexArray();
+		//cc.log("====>direction="+direction);
+		if(direction != -1 &&arrayAroundIndex[direction]!=-1){
 			this._curArray[index] = this._curArray[arrayAroundIndex[direction]];
 			this._curArray[arrayAroundIndex[direction]] = this._hideValue;
 		}
@@ -225,6 +244,16 @@ var GamePlaysLayer=GameBaseLayer.extend({
 			},this));
 			this.runAction(action);
 		}
+	},
+	isFinish:function(){
+		var len = this._arrAim.length;
+		for(var i = 0;i < len;i++){
+			cc.log("==>",len,this._arrAim[i],this._curArr[i]);
+			if(this._arrAim[i] != this._curArr[i]){
+				return false
+			}
+		}
+		return true;
 	},
 	//刷新精灵
 	refreshSprite:function(){
