@@ -15,13 +15,6 @@
     "jsList" : [
         "src/config/GameConfig.js",
         "src/resource.js",
-         "src/SysMenu.js",
-        "src/ButtonSprite.js",
-        "src/CourseLayer.js",
-        "src/GameLayer.js",
-        "src/UnitSprite.js",
-        "src/GameState.js",
-        "src/CommonUtil.js",
 
         "src/utils/Utils.js",
         "src/frameworks/FrameworkdsConfig.js",

@@ -16,7 +16,7 @@ var GamePlaysLayer=GameBaseLayer.extend({
 	initArray: function () {
 		this._arrImage = [];
 		for(var i = 0; i < GamePlaysLayer.Sum;i++){
-			var name = "res/"+ i +".png";
+			var name = "res/"+ (i) +".png";
 			this._arrImage.push(name);
 		}
 
@@ -94,11 +94,11 @@ var GamePlaysLayer=GameBaseLayer.extend({
 			this._bg.addChild(number);
 			this._arrAllSprite.push(number);
 			if(this._curArray[i] == this._hideValue){
-				number.setOpacity(0);
+				//number.setOpacity(0);
 			}
-
+			cc.log("===>this._curArray[i]="+this._curArray[i]);
 			//添加数字
-			var num = new cc.LabelTTF(this._curArray[i],"Arial",30);
+			var num = new cc.LabelTTF("" + this._curArray[i],"Arial",30);
 			num.setNormalizedPosition(0.5,0.5);
 			num.setColor(cc.color(0,255,255));
 			number.addChild(num)
@@ -150,12 +150,10 @@ var GamePlaysLayer=GameBaseLayer.extend({
 		arr.push(left);
 		arr.push(right);
 
-		cc.log("===>getHideSpriteAroundIndexArray="+i);
 		for(var i = 0;i < arr.length;i++){
 			if(arr[i] < 0 || arr[i] > 8){
 				arr[i] = -1;
 			}
-			cc.log("===>aroundIndexArray="+arr[i]);
 		}
 
 		return arr;
@@ -200,7 +198,6 @@ var GamePlaysLayer=GameBaseLayer.extend({
 	isRefresh:function(worldPos){
 		var dir = this._curCollosionSpirte._dir;
 		var offxy = 100;
-		cc.log("===>isRefresh",worldPos.y,this._curPos.y,dir);
 		switch(dir){
 			case 1://上
 				if(worldPos.y - this._curPos.y > offxy){
@@ -248,8 +245,8 @@ var GamePlaysLayer=GameBaseLayer.extend({
 	isFinish:function(){
 		var len = this._arrAim.length;
 		for(var i = 0;i < len;i++){
-			cc.log("==>",len,this._arrAim[i],this._curArr[i]);
-			if(this._arrAim[i] != this._curArr[i]){
+			cc.log("==>",len,this._arrAim[i],this._curArray[i]);
+			if(this._arrAim[i] != this._curArray[i]){
 				return false
 			}
 		}
