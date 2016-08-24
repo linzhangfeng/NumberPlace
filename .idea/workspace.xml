@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="29a4422a-6c45-4cb4-9e56-046e2f1812a8" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/layer/GamePlaysLayer.js" afterPath="$PROJECT_DIR$/src/layer/GamePlaysLayer.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="29a4422a-6c45-4cb4-9e56-046e2f1812a8" name="Default" comment="" />
     <ignored path="PandaRun.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -57,8 +54,8 @@
       <file leaf-file-name="GamePlaysLayer.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/layer/GamePlaysLayer.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.41165414">
-              <caret line="153" column="23" selection-start-line="153" selection-start-column="4" selection-end-line="153" selection-end-column="23" />
+            <state vertical-scroll-proportion="0.37218046">
+              <caret line="154" column="32" selection-start-line="154" selection-start-column="32" selection-end-line="154" selection-end-column="32" />
               <folding>
                 <element signature="e#1074#1383#0" expanded="false" />
                 <element signature="e#8990#11939#0" expanded="false" />
@@ -356,7 +353,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="-9" width="1932" height="1048" extended-state="0" />
+    <frame x="-9" y="-9" width="1932" height="1048" extended-state="1" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.12875536" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -786,8 +783,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/layer/GamePlaysLayer.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.41165414">
-          <caret line="153" column="23" selection-start-line="153" selection-start-column="4" selection-end-line="153" selection-end-column="23" />
+        <state vertical-scroll-proportion="0.37218046">
+          <caret line="154" column="32" selection-start-line="154" selection-start-column="32" selection-end-line="154" selection-end-column="32" />
           <folding>
             <element signature="e#1074#1383#0" expanded="false" />
             <element signature="e#8990#11939#0" expanded="false" />
