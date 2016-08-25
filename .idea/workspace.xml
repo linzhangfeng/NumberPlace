@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="29a4422a-6c45-4cb4-9e56-046e2f1812a8" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/Sprite/frame_tangram_xk.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/layer/GamePlaysLayer.js" afterPath="$PROJECT_DIR$/src/layer/GamePlaysLayer.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scene/GameScene.js" afterPath="$PROJECT_DIR$/src/scene/GameScene.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/resource.js" afterPath="$PROJECT_DIR$/src/resource.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="29a4422a-6c45-4cb4-9e56-046e2f1812a8" name="Default" comment="" />
     <ignored path="PandaRun.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -367,7 +361,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="151" y="99" width="1620" height="991" extended-state="1" />
+    <frame x="151" y="99" width="1620" height="991" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1776808" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
