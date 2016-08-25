@@ -3,7 +3,7 @@ var res = {
     Bg_Main_Png:        "res/BackGround/frame_exam_bg.png",
     Bg_GamePlay_Jpg:   "res/BackGround/game_background.jpg",
     PuzzleNine:         "res/Sprite/PT_000_0.png",
-    PuzzleNine_Kuang:   "res/Sprite/PT-6412_dakuang.png",
+    PuzzleNine_Kuang:   "res/Sprite/PT-6412_dakuang.png",//6412_dakuang6412_dakuang6412_dakuang6412_dakuang
 
     //sprite
     Sprite_Di_Png:   "res/Sprite/frame_tangram_xk.png",
