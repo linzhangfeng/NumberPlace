@@ -29,14 +29,55 @@ package org.cocos2dx.javascript;
 import org.cocos2dx.lib.Cocos2dxActivity;
 import org.cocos2dx.lib.Cocos2dxGLSurfaceView;
 
+import android.util.Log;
+
+import com.xiaomi.ad.AdListener;
+import com.xiaomi.ad.AdSdk;
+import com.xiaomi.ad.common.pojo.AdError;
+import com.xiaomi.ad.common.pojo.AdEvent;
+import com.xiaomi.ad.puppet.AdPuppetManager;
+
 public class AppActivity extends Cocos2dxActivity {
-	
+	public String TAG = "AppActivity";
     @Override
     public Cocos2dxGLSurfaceView onCreateView() {
         Cocos2dxGLSurfaceView glSurfaceView = new Cocos2dxGLSurfaceView(this);
         // TestCpp should create stencil buffer
         glSurfaceView.setEGLConfigChooser(5, 6, 5, 0, 16, 8);
 
+        AdSdk.initialize(this, Constant.APP_ID);
+        
+        this.showMiAd();
         return glSurfaceView;
+    }
+    
+    void showMiAd(){
+        AdPuppetManager.requestInterstitialAd(this, Constant.POSITION_ID, new AdListener() {
+            @Override
+            public void onAdEvent(AdEvent event) {
+                Log.d(TAG, "onAdEvent name:" + event.name());
+                //这儿会有一系列用户行为相关的回调事件。如果需要，您可以通过event.mType来判断用户的行为类型，从而采取不同的处理方式。
+                if (AdEvent.TYPE_SKIP == event.mType) {
+                    //用户关闭了插播广告
+                } else if (AdEvent.TYPE_CLICK == event.mType) {
+                    //用户点击了插播广告
+                }
+            }
+
+            @Override
+            public void onAdError(AdError error) {
+                //这个方法被调用时，表示从服务器端请求插屏广告时，出现错误。
+                Log.e(TAG, "onAdError:" + error);
+            }
+
+            @Override
+            public void onAdLoaded() {
+                //这个方法被调用时，表示要展示插屏广告了。如果需要，您可以做一些后续逻辑处理。
+                Log.d(TAG, "onAdLoaded:");
+                if (AdPuppetManager.isInterstitialAdReady(Constant.POSITION_ID)) {
+                    AdPuppetManager.showInterstitialAd(Constant.POSITION_ID);
+                }
+            }
+        });
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.huanyue.tiantianaipintu"
+      package="com.hanyue.pintu.mi"
       android:versionCode="1"
       android:versionName="1.0"
       android:installLocation="auto">
@@ -25,6 +25,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <!-- 小米 begin -->
+        <activity
+        android:name="com.xiaomi.ad.puppet.AdPuppetActivity"
+        android:configChanges="orientation|screenSize"
+        android:screenOrientation="behind"
+        android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"></activity>
+        <!-- 小米 end -->
     </application>
 
     <supports-screens android:anyDensity="true"
@@ -38,7 +46,17 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>  
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>  
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>  
-    
   	<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
  	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+ 	
+ 	<!-- 小米广告  begin-->
+ 	<uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <!-- 小米广告  end-->
+ 	
 </manifest> 
