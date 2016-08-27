@@ -1,4 +1,4 @@
-var MainScene=cc.Layer.extend({
+var MainLayer=cc.Layer.extend({
 	ctor:function(){
 		this._super();
 		this.init();
@@ -28,14 +28,14 @@ var MainScene=cc.Layer.extend({
 			["res/btn_blue_a.png",	"res/btn_blue_b.png",		"res/btn_ds.png"]
 		];
 
-		for(var i = 0;i < MainScene.ButtonSum;i++){
+		for(var i = 0;i < MainLayer.ButtonSum;i++){
 			var arr = arrImage[i];
 			var button = new ccui.Button(arr[0],arr[1]);
 			button.setTouchEnabled(true);
 			button.setPressedActionEnabled(true);
 			button.addTouchEventListener(this.onGamePlayButtonTouch,this);
 			button.setTag(GameConfig.GameList.StartIndex + i);
-			var y = utils.getPositionYbyCentrePos(this._size.height*0.5,i,MainScene.ButtonSum,this._size.height*0.15);
+			var y = utils.getPositionYbyCentrePos(this._size.height*0.5,i,MainLayer.ButtonSum,this._size.height*0.15);
 			button.setPosition(this._size.width*0.5,y);
 			this._bg.addChild(button);
 
@@ -52,10 +52,10 @@ var MainScene=cc.Layer.extend({
 		}
 	},
 });
-MainScene.ButtonSum = 3;
-MainScene.scene=function(){
+MainLayer.ButtonSum = 3;
+var MainScene=function(){
 	var scene=new cc.Scene();
-	var layer=new MainScene();
+	var layer=new MainLayer();
 	scene.addChild(layer);
 	return scene;
 }

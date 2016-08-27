@@ -428,7 +428,7 @@ GamePlaysLayer.checkUnitArray=[];
  */
 var GamePlayResultLayer = PopUpBaseLayer.extend({
 	ctor: function (games) {
-		this._super();
+		this._super(games);
 		this._games = games;
 		this.initData();
 		this.initListener();
@@ -456,27 +456,6 @@ var GamePlayResultLayer = PopUpBaseLayer.extend({
 		label2.color=cc.color(132,84,61,255);
 
 		this.initButton(resultBg);
-
-		return;
-		//首页
-		var btn=new ButtonSprite("",res.home_png,"",this.resultLayer,null,function(){
-			//cc.director.runScene(new cc.TransitionFade(0.4,new SysMenu.scene()));
-			cc.director.runScene(new SysMenu.scene());
-		}.bind(this));
-		btn.x = this.resultLayer.width / 3;
-		btn.y = resultSp.y-resultSp.height/2+btn.height/6;
-
-		//重玩
-		var btn2=new ButtonSprite("",res.refresh_png,"",this.resultLayer,null,function(){
-			if(cc.sys.isMobile){
-				//创建横幅广告
-				var ret = jsb.reflection.callStaticMethod("NativeOcClass","callNativeCreateBanner");
-			}
-
-			this.reStart();
-		}.bind(this));
-		btn2.x = this.resultLayer.width*2 / 3;
-		btn2.y = btn.y;
 	},
 	initButton:function(bg){
 		var size = bg.getContentSize();

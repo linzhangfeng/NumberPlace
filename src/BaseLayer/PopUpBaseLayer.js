@@ -1,5 +1,6 @@
 var PopUpBaseLayer = cc.Layer.extend({
 	ctor:function(tag){
+		var tag = tag||0;
 		this._super();
 		this.setTag(tag);
 		this.initBaseData();
