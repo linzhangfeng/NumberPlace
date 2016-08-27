@@ -162,6 +162,9 @@ var GamePlaysLayer=GameBaseLayer.extend({
 		var layer = new GamePlayResultLayer(this.getTag());
 		this.addChild(layer,100);
 		this._gameResultLayer = layer;
+
+		this._gameResultLayer.setScore(this._step*10);
+		this._gameResultLayer.setStep(this._step);
 	},
 	initGamesInformationLayer: function () {
 		var layer = new GamePlaysInformationLayer(this.getTag());
@@ -482,7 +485,7 @@ var GamePlayResultLayer = PopUpBaseLayer.extend({
 			sender.setTouchEnabled(false);
 			switch (tag) {
 				case GamePlayResultLayer.Tag.ButtonTag_Back:
-					cc.director.runScene(new MainScene.scene());
+					cc.director.runScene(new MainScene());
 					break;
 				case GamePlayResultLayer.Tag.ButtonTag_Restart:
 					cc.director.runScene(new GameScene(this._games));
