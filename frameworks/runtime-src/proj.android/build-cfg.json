@@ -24,6 +24,14 @@
         {
             "from": "../../cocos2d-x/cocos/scripting/js-bindings/script",
             "to": "script"
+        },
+        {
+            "from": "../../../android/libs",
+            "to": "../libs"
+        },
+        {
+            "from": "../../../android/assets",
+            "to": "../assets"
         }
     ]
 }
