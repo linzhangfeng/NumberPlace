@@ -58,6 +58,7 @@ cc.game.onStart = function(){
     	
     	cc.director.runScene(new MainScene());
     	//cc.director.runScene(GameLayer.scene());
+        cc.log("lin=test=github");
     }, this);
 };
 cc.game.run();
